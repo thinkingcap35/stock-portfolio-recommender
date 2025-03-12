@@ -28,6 +28,13 @@
    - Added proper documentation (README.md, LICENSE)
    - Implemented filesystem checks and local server requirements
 
+6. **Enhanced API Handling and User Experience (v3.3)**:
+   - Implemented retry mechanism with exponential backoff for API rate limit errors
+   - Added more informative loading messages, including status updates during retries
+   - Introduced delay between API calls to help prevent rate limiting
+   - Improved error handling and user feedback throughout the process
+   - Optimized chart rendering to prevent conflicts with multiple data updates
+
 ## Architecture Evolution
 
 ```mermaid
@@ -68,6 +75,17 @@ graph TD
         W --> Y[Data Processing]
         Y --> Z[Enhanced UI with Error Handling]
     end
+
+    subgraph "v3.3"
+        AA[User Input] --> BB{Rate Limit Check}
+        BB -->|Under Limit| CC[Direct API Call]
+        BB -->|Over Limit| DD[Exponential Backoff]
+        DD --> EE[Retry with Delay]
+        EE --> CC
+        CC --> FF[Smart Data Processing]
+        FF --> GG[Optimized Chart Rendering]
+        GG --> HH[Real-time Status Updates]
+    end
 ```
 
-This diagram illustrates how our app evolved from a simple, hardcoded solution to a more robust, API-driven application with fallback mechanisms and improved user experience.
+This diagram illustrates how our app evolved from a simple hardcoded solution to a sophisticated, resilient application with advanced error handling, rate limiting management, and improved user experience.
