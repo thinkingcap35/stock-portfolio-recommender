@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index-Based Stock Portfolio Recommender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #2c5282;
+        }
+        .info-box p {
+            margin-bottom: 10px;
+        }
+        .graph-cell {
+            width: 500px;
+            padding: 10px;
+        }
+        .graph-canvas {
+            width: 100%;
+            height: 180px;
+        }
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Index-Based Stock Portfolio Recommender</h1>
+        
+        <div class="info-box">
+            <h3>How It Works</h3>
+            <p>This tool recommends a portfolio based on an index and market cap range:</p>
+            <ul>
+                <li>Select an index (e.g., S&P 500, NASDAQ)</li>
+                <li>Specify a market cap range</li>
+                <li>The tool will fetch stocks that match the criteria and generate recommendations</li>
+            </ul>
+        </div>
+        
+        <form id="indexBasedRecommendationForm">
+            <div class="form-group">
+                <label for="funding">Available Funding ($):</label>
+                <input type="number" id="funding" required min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="riskProfile">Risk Profile:</label>
+                <select id="riskProfile" required>
+                    <option value="conservative">Conservative (Low Risk)</option>
+                    <option value="moderate">Moderate (Medium Risk)</option>
+                    <option value="aggressive">Aggressive (High Risk)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="index">Index:</label>
+                <select id="index" required>
+                    <option value="S&P500">S&P 500</option>
+                    <option value="NASDAQ">NASDAQ</option>
+                    <option value="DJIA">Dow Jones Industrial Average</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="minMarketCap">Minimum Market Cap ($ Billion):</label>
+                <input type="number" id="minMarketCap" required min="0" step="0.1">
+            </div>
+            
+            <div class="form-group">
+                <label for="maxMarketCap">Maximum Market Cap ($ Billion):</label>
+                <input type="number" id="maxMarketCap" required min="0" step="0.1">
+            </div>
+            
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+        <div id="results">
+            <h2>Recommended Portfolio</h2>
+            <div id="recommendationOutput"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="index_based.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Portfolio Recommender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #stockList {
+            margin-top: 10px;
+        }
+        .stock-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #2c5282;
+        }
+        .info-box p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Stock Portfolio Recommender <span style="font-size: 0.5em; vertical-align: super;">v2.0</span></h1>
+            <a href="index_based.html" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Try Index-Based Recommendations</a>
+        </div>
+        
+        <div class="info-box">
+            <h3>Important: Before Using</h3>
+            <p>This tool uses real market data to analyze stock volatility and make recommendations. To enable data access:</p>
+            <ol>
+                <li>First visit: <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank">CORS Proxy Demo</a></li>
+                <li>Click the button to temporarily enable access</li>
+                <li>Return to this page and proceed with your analysis</li>
+            </ol>
+        </div>
+
+        <div class="info-box">
+            <h3>How It Works</h3>
+            <p>This tool analyzes 52-week stock data to calculate volatility and recommend allocations based on your risk profile:</p>
+            <ul>
+                <li><strong>Conservative:</strong> Favors lower volatility stocks to minimize risk</li>
+                <li><strong>Moderate:</strong> Balanced approach considering both stability and growth potential</li>
+                <li><strong>Aggressive:</strong> Weights towards higher volatility stocks for potential higher returns</li>
+            </ul>
+        </div>
+        
+        <form id="recommendationForm">
+            <div class="form-group">
+                <label for="funding">Available Funding ($):</label>
+                <input type="number" id="funding" required min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="riskProfile">Risk Profile:</label>
+                <select id="riskProfile" required>
+                    <option value="conservative">Conservative (Low Risk)</option>
+                    <option value="moderate">Moderate (Medium Risk)</option>
+                    <option value="aggressive">Aggressive (High Risk)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Stock Tickers:</label>
+                <div id="stockList">
+                    <div class="stock-item">
+                        <input type="text" class="stock-ticker" placeholder="Enter stock ticker (e.g., AAPL)" required>
+                        <button type="button" onclick="removeStock(this)">Remove</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addStock()">Add Another Stock</button>
+            </div>
+            
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+        <div id="results">
+            <h2>Recommended Portfolio</h2>
+            <div style="width: 100%; max-width: 400px; margin: 20px auto;">
+                <canvas id="allocationPieChart"></canvas>
+            </div>
+            <div id="recommendationOutput"></div>
+        </div>
+    </div>
+
+    <style>
+        .graph-cell {
+            width: 500px;
+            padding: 10px;
+        }
+        .graph-canvas {
+            width: 100%;
+            height: 180px;
+        }
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
