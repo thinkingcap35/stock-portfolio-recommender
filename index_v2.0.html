@@ -80,33 +80,28 @@
         .info-box p {
             margin-bottom: 10px;
         }
-        .graph-cell {
-            width: 500px;
-            padding: 10px;
-        }
-        .graph-canvas {
-            width: 100%;
-            height: 180px;
-        }
-        table {
-            width: 100%;
-            table-layout: fixed;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Stock Portfolio Recommender <span style="font-size: 0.5em; vertical-align: super;">v3.0</span></h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Stock Portfolio Recommender <span style="font-size: 0.5em; vertical-align: super;">v2.0</span></h1>
+            <a href="index_based.html" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Try Index-Based Recommendations</a>
+        </div>
         
         <div class="info-box">
             <h3>Important: Before Using</h3>
-            <p>This tool uses Alpha Vantage's market data API to analyze stock volatility and make recommendations. Enter US stock tickers (e.g., AAPL, MSFT, GOOGL) to get started.</p>
-            <p style="color: #666; font-size: 0.9em;">Note: Due to API rate limits, data fetching might take a few seconds per stock. Please be patient while the recommendations are being generated.</p>
+            <p>This tool uses real market data to analyze stock volatility and make recommendations. To enable data access:</p>
+            <ol>
+                <li>First visit: <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank">CORS Proxy Demo</a></li>
+                <li>Click the button to temporarily enable access</li>
+                <li>Return to this page and proceed with your analysis</li>
+            </ol>
         </div>
 
         <div class="info-box">
             <h3>How It Works</h3>
-            <p>This tool analyzes stock data to calculate volatility and recommend allocations based on your risk profile:</p>
+            <p>This tool analyzes 52-week stock data to calculate volatility and recommend allocations based on your risk profile:</p>
             <ul>
                 <li><strong>Conservative:</strong> Favors lower volatility stocks to minimize risk</li>
                 <li><strong>Moderate:</strong> Balanced approach considering both stability and growth potential</li>
@@ -133,11 +128,11 @@
                 <label>Stock Tickers:</label>
                 <div id="stockList">
                     <div class="stock-item">
-                        <input type="text" class="stock-ticker" style="flex: 1;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-                        <button type="button" onclick="window.removeStock(this)">Remove</button>
+                        <input type="text" class="stock-ticker" placeholder="Enter stock ticker (e.g., AAPL)" required>
+                        <button type="button" onclick="removeStock(this)">Remove</button>
                     </div>
                 </div>
-                <button type="button" onclick="window.addStock()">Add Another Stock</button>
+                <button type="button" onclick="addStock()">Add Another Stock</button>
             </div>
             
             <button type="submit">Get Recommendations</button>
@@ -152,7 +147,21 @@
         </div>
     </div>
 
+    <style>
+        .graph-cell {
+            width: 500px;
+            padding: 10px;
+        }
+        .graph-canvas {
+            width: 100%;
+            height: 180px;
+        }
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="client.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

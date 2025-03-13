@@ -1,6 +1,12 @@
 # Stock Portfolio Recommender
 
-This is a web application that provides stock portfolio recommendations based on user input and risk profile.
+A web-based tool that helps users create diversified stock portfolios based on risk profiles and historical volatility data.
+
+## Features
+
+- Real-time stock data from Alpha Vantage API
+- Risk-based portfolio allocation (Conservative, Moderate, Aggressive)
+- Interactive charts showing portfolio allocation
 
 ## Prerequisites
 
@@ -18,7 +24,7 @@ This is a web application that provides stock portfolio recommendations based on
    - Under "Source", select the branch you want to deploy (usually `main` or `master`)
    - Click "Save"
 
-4. Your application will be available at `https://your-username.github.io/repository-name/`
+4. Your application will be available at `https://your-username.github.io/stock-portfolio-recommender/`
 
 ## Local Setup (Optional)
 
@@ -28,7 +34,7 @@ If you want to run the application locally:
 
 2. Navigate to the project directory:
    ```
-   cd stock_recommendation_server
+   cd stock-portfolio-recommender
    ```
 
 3. Open the `index.html` file in a web browser.

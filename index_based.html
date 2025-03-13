@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Portfolio Recommender</title>
+    <title>Index-Based Stock Portfolio Recommender</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,25 +47,12 @@
         button:hover {
             background-color: #45a049;
         }
-        #stockList {
-            margin-top: 10px;
-        }
-        .stock-item {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
         #results {
             margin-top: 20px;
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 4px;
             display: none;
-        }
-        .error {
-            color: red;
-            margin-top: 5px;
-            font-size: 14px;
         }
         .info-box {
             background-color: #e8f4f8;
@@ -96,25 +83,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>Stock Portfolio Recommender <span style="font-size: 0.5em; vertical-align: super;">v3.0</span></h1>
+        <h1>Index-Based Stock Portfolio Recommender</h1>
         
         <div class="info-box">
-            <h3>Important: Before Using</h3>
-            <p>This tool uses Alpha Vantage's market data API to analyze stock volatility and make recommendations. Enter US stock tickers (e.g., AAPL, MSFT, GOOGL) to get started.</p>
-            <p style="color: #666; font-size: 0.9em;">Note: Due to API rate limits, data fetching might take a few seconds per stock. Please be patient while the recommendations are being generated.</p>
-        </div>
-
-        <div class="info-box">
             <h3>How It Works</h3>
-            <p>This tool analyzes stock data to calculate volatility and recommend allocations based on your risk profile:</p>
+            <p>This tool recommends a portfolio based on an index and market cap range:</p>
             <ul>
-                <li><strong>Conservative:</strong> Favors lower volatility stocks to minimize risk</li>
-                <li><strong>Moderate:</strong> Balanced approach considering both stability and growth potential</li>
-                <li><strong>Aggressive:</strong> Weights towards higher volatility stocks for potential higher returns</li>
+                <li>Select an index (e.g., S&P 500, NASDAQ)</li>
+                <li>Specify a market cap range</li>
+                <li>The tool will fetch stocks that match the criteria and generate recommendations</li>
             </ul>
         </div>
         
-        <form id="recommendationForm">
+        <form id="indexBasedRecommendationForm">
             <div class="form-group">
                 <label for="funding">Available Funding ($):</label>
                 <input type="number" id="funding" required min="0" step="0.01">
@@ -130,14 +111,22 @@
             </div>
             
             <div class="form-group">
-                <label>Stock Tickers:</label>
-                <div id="stockList">
-                    <div class="stock-item">
-                        <input type="text" class="stock-ticker" style="flex: 1;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-                        <button type="button" onclick="window.removeStock(this)">Remove</button>
-                    </div>
-                </div>
-                <button type="button" onclick="window.addStock()">Add Another Stock</button>
+                <label for="index">Index:</label>
+                <select id="index" required>
+                    <option value="S&P500">S&P 500</option>
+                    <option value="NASDAQ">NASDAQ</option>
+                    <option value="DJIA">Dow Jones Industrial Average</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="minMarketCap">Minimum Market Cap ($ Billion):</label>
+                <input type="number" id="minMarketCap" required min="0" step="0.1">
+            </div>
+            
+            <div class="form-group">
+                <label for="maxMarketCap">Maximum Market Cap ($ Billion):</label>
+                <input type="number" id="maxMarketCap" required min="0" step="0.1">
             </div>
             
             <button type="submit">Get Recommendations</button>
@@ -145,14 +134,11 @@
 
         <div id="results">
             <h2>Recommended Portfolio</h2>
-            <div style="width: 100%; max-width: 400px; margin: 20px auto;">
-                <canvas id="allocationPieChart"></canvas>
-            </div>
             <div id="recommendationOutput"></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="client.js"></script>
+    <script src="index_based.js"></script>
 </body>
 </html>
