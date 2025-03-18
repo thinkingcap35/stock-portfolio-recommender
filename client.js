@@ -1,5 +1,5 @@
 // Stock Portfolio Recommender v3.0
-(function() {
+const app = (function() {
     // Function to add a new stock input field
     function addStock() {
         const stockList = document.getElementById('stockList');
@@ -7,7 +7,7 @@
         newStockItem.className = 'stock-item';
         newStockItem.innerHTML = `
             <input type="text" class="stock-ticker" style="flex: 1;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-            <button type="button" onclick="window.removeStock(this)">Remove</button>
+            <button type="button" onclick="app.removeStock(this)">Remove</button>
         `;
         stockList.appendChild(newStockItem);
     }
@@ -232,70 +232,81 @@
         });
     }
 
-    // Handle portfolio form submission
-    document.getElementById('portfolioForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    // Initialize event listeners
+    function init() {
+        // Add event listeners for radio buttons to update progress
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
 
-        // Get form values
-        const funding = parseFloat(document.getElementById('funding').value);
-        const stockInputs = document.getElementsByClassName('stock-ticker');
-        const tickers = Array.from(stockInputs).map(input => input.value.toUpperCase());
+        // Handle portfolio form submission
+        document.getElementById('portfolioForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        try {
-            // Generate recommendations
-            const recommendations = await generateRecommendations(tickers, funding);
+            // Get form values
+            const funding = parseFloat(document.getElementById('funding').value);
+            const stockInputs = document.getElementsByClassName('stock-ticker');
+            const tickers = Array.from(stockInputs).map(input => input.value.toUpperCase());
 
-            // Display results
-            const resultsDiv = document.getElementById('results');
-            const outputDiv = document.getElementById('recommendationOutput');
+            try {
+                // Generate recommendations
+                const recommendations = await generateRecommendations(tickers, funding);
 
-            let html = '<table style="width:100%; border-collapse: collapse; margin-top: 20px;">';
-            html += `
-                <tr style="background-color: #f2f2f2;">
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Stock</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Allocation %</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Amount ($)</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Current Price ($)</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W High ($)</th>
-                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W Low ($)</th>
-                </tr>
-            `;
+                // Display results
+                const resultsDiv = document.getElementById('results');
+                const outputDiv = document.getElementById('recommendationOutput');
 
-            recommendations.forEach((rec) => {
+                let html = '<table style="width:100%; border-collapse: collapse; margin-top: 20px;">';
                 html += `
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${rec.ticker}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">${rec.percentage}%</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">$${rec.amount}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">$${rec.currentPrice.toFixed(2)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearHigh.toFixed(2)}</td>
-                        <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearLow.toFixed(2)}</td>
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Stock</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Allocation %</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Amount ($)</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Current Price ($)</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W High ($)</th>
+                        <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W Low ($)</th>
                     </tr>
                 `;
-            });
 
-            html += '</table>';
+                recommendations.forEach((rec) => {
+                    html += `
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;">${rec.ticker}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">${rec.percentage}%</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">$${rec.amount}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">$${rec.currentPrice.toFixed(2)}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearHigh.toFixed(2)}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearLow.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
 
-            outputDiv.innerHTML = html;
-            resultsDiv.style.display = 'block';
+                html += '</table>';
 
-            // Render allocation pie chart
-            renderAllocationPieChart(recommendations);
+                outputDiv.innerHTML = html;
+                resultsDiv.style.display = 'block';
 
-        } catch (error) {
-            console.error('Error in form submission:', error);
-            document.getElementById('recommendationOutput').innerHTML = 
-                `Error generating recommendations: ${error.message}<br>Please check your inputs and try again.`;
-        }
-    });
+                // Render allocation pie chart
+                renderAllocationPieChart(recommendations);
 
-    // Add event listeners for radio buttons to update progress
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', updateProgress);
-    });
+            } catch (error) {
+                console.error('Error in form submission:', error);
+                document.getElementById('recommendationOutput').innerHTML = 
+                    `Error generating recommendations: ${error.message}<br>Please check your inputs and try again.`;
+            }
+        });
+    }
 
-    // Expose necessary functions to global scope
-    window.addStock = addStock;
-    window.removeStock = removeStock;
-    window.calculateRiskProfile = calculateRiskProfile;
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Return public methods
+    return {
+        addStock,
+        removeStock,
+        calculateRiskProfile
+    };
 })();
+
+// Expose app to global scope
+window.app = app;

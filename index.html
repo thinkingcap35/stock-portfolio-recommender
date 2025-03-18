@@ -281,7 +281,7 @@
                 </div>
             </div>
 
-            <button type="button" onclick="calculateRiskProfile()">Calculate My Risk Profile</button>
+            <button type="button" onclick="app.calculateRiskProfile()">Calculate My Risk Profile</button>
         </div>
 
         <form id="portfolioForm">
@@ -295,10 +295,10 @@
                 <div id="stockList">
                     <div class="stock-item">
                         <input type="text" class="stock-ticker" style="flex: 1;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-                        <button type="button" onclick="window.removeStock(this)">Remove</button>
+                        <button type="button" onclick="app.removeStock(this)">Remove</button>
                     </div>
                 </div>
-                <button type="button" onclick="window.addStock()">Add Another Stock</button>
+                <button type="button" onclick="app.addStock()">Add Another Stock</button>
             </div>
             
             <button type="submit">Get Recommendations</button>
