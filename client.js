@@ -61,6 +61,9 @@
             riskProfile = 'aggressive';
         }
 
+        // Store the calculated risk profile
+        window.currentRiskProfile = riskProfile;
+
         // Show results and portfolio form
         displayRiskProfile(riskProfile, riskScore);
         document.getElementById('riskQuestionnaire').style.display = 'none';
@@ -76,7 +79,7 @@
         };
 
         const infoBox = document.createElement('div');
-        infoBox.className = 'info-box';
+        infoBox.className = 'risk-profile-result';
         infoBox.innerHTML = `
             <h3>Your Risk Profile: ${profile.charAt(0).toUpperCase() + profile.slice(1)}</h3>
             <p>${profileDescriptions[profile]}</p>
