@@ -306,11 +306,23 @@ window.app = (function() {
     // Initialize the application when DOM is ready
     document.addEventListener('DOMContentLoaded', init);
 
+    // Function to go back to the questionnaire
+    function backToQuestionnaire() {
+        document.getElementById('portfolioForm').style.display = 'none';
+        document.getElementById('riskQuestionnaire').style.display = 'block';
+        document.querySelector('.risk-profile-result').remove();
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.checked = false;
+        });
+        updateProgress();
+    }
+
     // Return public methods
     const publicMethods = {
         addStock,
         removeStock,
-        calculateRiskProfile
+        calculateRiskProfile,
+        backToQuestionnaire
     };
 
     console.log('App namespace initialized with methods:', Object.keys(publicMethods));
