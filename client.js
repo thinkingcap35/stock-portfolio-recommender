@@ -1,5 +1,5 @@
 // Stock Portfolio Recommender v3.0
-const app = (function() {
+window.app = (function() {
     let allocationPieChart = null;
 
     // Function to add a new stock input field
@@ -310,6 +310,3 @@ const app = (function() {
         calculateRiskProfile
     };
 })();
-
-// Expose app to global scope
-window.app = app;
