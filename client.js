@@ -9,8 +9,8 @@ window.app = (function() {
         const newStockItem = document.createElement('div');
         newStockItem.className = 'stock-item';
         newStockItem.innerHTML = `
-            <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px; height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-            <button type="button" onclick="app.removeStock(this)">Remove</button>
+            <input type="text" class="stock-ticker" style="height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+            <button type="button" class="remove-stock" onclick="app.removeStock(this)">Remove</button>
         `;
         stockList.appendChild(newStockItem);
     }
@@ -379,8 +379,8 @@ window.app = (function() {
         const stockList = document.getElementById('stockList');
         stockList.innerHTML = `
             <div class="stock-item">
-                <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-                <button type="button" onclick="app.removeStock(this)">Remove</button>
+                <input type="text" class="stock-ticker" style="height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+                <button type="button" class="remove-stock" onclick="app.removeStock(this)">Remove</button>
             </div>
         `;
         updateProgress();

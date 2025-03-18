@@ -60,6 +60,13 @@
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
+            width: 100%;
+        }
+        .stock-ticker {
+            flex: 1;
+        }
+        .remove-stock {
+            width: 80px;
         }
         #results {
             margin-top: 20px;
@@ -299,8 +306,8 @@
                 <label>Stock Tickers:</label>
                 <div id="stockList">
                     <div class="stock-item">
-                        <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px; height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
-                        <button type="button" onclick="app.removeStock(this)">Remove</button>
+                        <input type="text" class="stock-ticker" style="height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+                        <button type="button" class="remove-stock" onclick="app.removeStock(this)">Remove</button>
                     </div>
                 </div>
                 <button type="button" onclick="app.addStock()">Add Another Stock</button>
