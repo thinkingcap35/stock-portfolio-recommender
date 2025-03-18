@@ -9,7 +9,7 @@ window.app = (function() {
         const newStockItem = document.createElement('div');
         newStockItem.className = 'stock-item';
         newStockItem.innerHTML = `
-            <input type="text" class="stock-ticker" style="flex: 1;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+            <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
             <button type="button" onclick="app.removeStock(this)">Remove</button>
         `;
         stockList.appendChild(newStockItem);
@@ -94,32 +94,6 @@ window.app = (function() {
         container.insertBefore(infoBox, document.getElementById('portfolioForm'));
     }
 
-    // Function to fetch stock data from Alpha Vantage API
-    async function fetchStockData(ticker) {
-        console.log(`Fetching data for ${ticker}`);
-        const apiKey = 'YOUR_ALPHA_VANTAGE_API_KEY'; // Replace with your actual API key
-        try {
-            const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${apiKey}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (!data['Global Quote'] || Object.keys(data['Global Quote']).length === 0) {
-                throw new Error(`No data available for ${ticker}. Please ensure the ticker symbol is correct.`);
-            }
-
-            const quote = data['Global Quote'];
-            return {
-                price: parseFloat(quote['05. price']),
-                high: parseFloat(quote['03. high']),
-                low: parseFloat(quote['04. low'])
-            };
-        } catch (error) {
-            console.error('Error fetching stock data:', error);
-            throw new Error(`Failed to fetch data for ${ticker}. Please try again later. (${error.message})`);
-        }
-    }
 
     // Calculate volatility (using high-low range as a simple proxy)
     function calculateVolatility(high, low, price) {
@@ -163,14 +137,15 @@ window.app = (function() {
                 if (stockData.length > 0) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                 }
-                const { price, high, low } = await fetchStockData(ticker);
+                const { price, high, low, weeklyData } = await fetchStockData(ticker);
                 const volatility = calculateVolatility(high, low, price);
                 stockData.push({
                     ticker,
                     volatility,
                     currentPrice: price,
                     yearHigh: high,
-                    yearLow: low
+                    yearLow: low,
+                    weeklyData
                 });
             }
 
@@ -189,6 +164,80 @@ window.app = (function() {
             console.error('Error generating recommendations:', error);
             throw error;
         }
+    }
+
+    // Function to fetch stock data from Alpha Vantage API
+    async function fetchStockData(ticker) {
+        console.log(`Fetching data for ${ticker}`);
+        const apiKey = 'YOUR_ALPHA_VANTAGE_API_KEY'; // Replace with your actual API key
+        try {
+            const [quoteResponse, weeklyResponse] = await Promise.all([
+                fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${apiKey}`),
+                fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${ticker}&apikey=${apiKey}`)
+            ]);
+
+            if (!quoteResponse.ok || !weeklyResponse.ok) {
+                throw new Error(`HTTP error! status: ${quoteResponse.status} or ${weeklyResponse.status}`);
+            }
+
+            const [quoteData, weeklyData] = await Promise.all([
+                quoteResponse.json(),
+                weeklyResponse.json()
+            ]);
+
+            if (!quoteData['Global Quote'] || Object.keys(quoteData['Global Quote']).length === 0) {
+                throw new Error(`No data available for ${ticker}. Please ensure the ticker symbol is correct.`);
+            }
+
+            const quote = quoteData['Global Quote'];
+            const weeklyTimeSeries = weeklyData['Weekly Time Series'];
+            const weeklyPrices = Object.values(weeklyTimeSeries).slice(0, 52).map(week => parseFloat(week['4. close']));
+
+            return {
+                price: parseFloat(quote['05. price']),
+                high: parseFloat(quote['03. high']),
+                low: parseFloat(quote['04. low']),
+                weeklyData: weeklyPrices
+            };
+        } catch (error) {
+            console.error('Error fetching stock data:', error);
+            throw new Error(`Failed to fetch data for ${ticker}. Please try again later. (${error.message})`);
+        }
+    }
+
+    // Function to render 52-week trend graph
+    function renderStockGraph(rec, index) {
+        const ctx = document.getElementById(`graph-${index}`).getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 52}, (_, i) => i + 1),
+                datasets: [{
+                    label: `${rec.ticker} 52-Week Performance`,
+                    data: rec.weeklyData.reverse(),
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        beginAtZero: false
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
     }
 
     function renderAllocationPieChart(recommendations) {
@@ -264,16 +313,17 @@ window.app = (function() {
                     let html = '<table style="width:100%; border-collapse: collapse; margin-top: 20px;">';
                     html += `
                         <tr style="background-color: #f2f2f2;">
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Stock</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Allocation %</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Amount ($)</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Current Price ($)</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W High ($)</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">52W Low ($)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">Stock</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">Allocation %</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">Amount ($)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">Current Price ($)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">52W High ($)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 10%;">52W Low ($)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd; width: 40%;">52-Week Performance</th>
                         </tr>
                     `;
 
-                    recommendations.forEach((rec) => {
+                    recommendations.forEach((rec, index) => {
                         html += `
                             <tr>
                                 <td style="padding: 10px; border: 1px solid #ddd;">${rec.ticker}</td>
@@ -282,8 +332,16 @@ window.app = (function() {
                                 <td style="padding: 10px; border: 1px solid #ddd;">$${rec.currentPrice.toFixed(2)}</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearHigh.toFixed(2)}</td>
                                 <td style="padding: 10px; border: 1px solid #ddd;">$${rec.yearLow.toFixed(2)}</td>
+                                <td class="graph-cell" style="border: 1px solid #ddd;">
+                                    <canvas id="graph-${index}" class="graph-canvas"></canvas>
+                                </td>
                             </tr>
                         `;
+                    });
+
+                    // Render 52-week trend graphs
+                    recommendations.forEach((rec, index) => {
+                        renderStockGraph(rec, index);
                     });
 
                     html += '</table>';
@@ -310,10 +368,19 @@ window.app = (function() {
     function backToQuestionnaire() {
         document.getElementById('portfolioForm').style.display = 'none';
         document.getElementById('riskQuestionnaire').style.display = 'block';
+        document.getElementById('results').style.display = 'none';
         document.querySelector('.risk-profile-result').remove();
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.checked = false;
         });
+        // Reset the stock list to a single empty input
+        const stockList = document.getElementById('stockList');
+        stockList.innerHTML = `
+            <div class="stock-item">
+                <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+                <button type="button" onclick="app.removeStock(this)">Remove</button>
+            </div>
+        `;
         updateProgress();
     }
 

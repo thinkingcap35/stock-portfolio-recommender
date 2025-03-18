@@ -285,6 +285,8 @@
         </div>
 
         <form id="portfolioForm">
+            <button type="button" onclick="app.backToQuestionnaire()" style="background-color: #6c757d;">Back to Questionnaire</button>
+            
             <div class="form-group">
                 <label for="funding">Available Funding ($):</label>
                 <input type="number" id="funding" required min="0" step="0.01">
@@ -294,7 +296,7 @@
                 <label>Stock Tickers:</label>
                 <div id="stockList">
                     <div class="stock-item">
-                        <input type="text" class="stock-ticker" style="flex: 1; max-width: 200px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+                        <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
                         <button type="button" onclick="app.removeStock(this)">Remove</button>
                     </div>
                 </div>
@@ -302,7 +304,6 @@
             </div>
             
             <button type="submit">Get Recommendations</button>
-            <button type="button" onclick="app.backToQuestionnaire()" style="background-color: #6c757d;">Back to Questionnaire</button>
         </form>
 
         <div id="results">
