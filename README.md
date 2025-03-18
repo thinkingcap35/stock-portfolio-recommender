@@ -1,60 +1,64 @@
 # Stock Portfolio Recommender
 
-A web-based tool that helps users create diversified stock portfolios based on risk profiles and historical volatility data.
+This application provides personalized stock portfolio recommendations based on user risk profiles and selected stocks.
 
 ## Features
 
-- Real-time stock data from Alpha Vantage API
-- Risk-based portfolio allocation (Conservative, Moderate, Aggressive)
-- Interactive charts showing portfolio allocation
+- Risk profile questionnaire
+- Stock selection interface
+- Portfolio allocation recommendations
+- Visual representation of allocation using charts
 
 ## Prerequisites
 
-- An Alpha Vantage API key (get one for free at https://www.alphavantage.co/)
-- GitHub account
+- Node.js (v14 or later)
+- npm (v6 or later)
 
-## Deployment with GitHub Pages
+## Installation
 
-1. Fork this repository to your GitHub account.
-
-2. In the `client.js` file, replace `'YOUR_ALPHA_VANTAGE_API_KEY'` with your actual Alpha Vantage API key.
-
-3. Enable GitHub Pages for your repository:
-   - Go to your repository's Settings > Pages
-   - Under "Source", select the branch you want to deploy (usually `main` or `master`)
-   - Click "Save"
-
-4. Your application will be available at `https://your-username.github.io/stock-portfolio-recommender/`
-
-## Local Setup (Optional)
-
-If you want to run the application locally:
-
-1. Clone your forked repository.
-
-2. Navigate to the project directory:
+1. Clone the repository:
    ```
+   git clone https://github.com/thinkingcap35/stock-portfolio-recommender.git
    cd stock-portfolio-recommender
    ```
 
-3. Open the `index.html` file in a web browser.
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-## Using the Application
+3. Create a `.env` file in the root directory and add your Alpha Vantage API key:
+   ```
+   ALPHA_VANTAGE_API_KEY=your_api_key_here
+   ```
 
-1. Input your investment amount, risk profile, and desired stocks.
+## Running the Application
 
-2. Click "Get Recommendations" to receive portfolio allocation suggestions.
+1. Start the server:
+   ```
+   npm start
+   ```
 
-## How It Works
+2. Open a web browser and navigate to `http://localhost:3000`
 
-This application uses the Alpha Vantage API to fetch real-time stock data. It then calculates volatility and provides portfolio allocation recommendations based on the user's risk profile (conservative, moderate, or aggressive).
+## Usage
 
-## Notes
+1. Complete the risk profile questionnaire.
+2. Enter your available funding and select stocks.
+3. Click "Get Recommendations" to receive your personalized portfolio allocation.
 
-- The free tier of the Alpha Vantage API has rate limits. If you encounter errors, you may need to wait before making additional requests.
-- This tool is for educational purposes only and should not be considered as financial advice.
-- Be cautious about sharing your API key. In a production environment, you would typically use a backend server to make API calls and keep your API key private.
+## Development
+
+To run the application in development mode with auto-reloading:
+
+```
+npm run dev
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+[MIT](https://choosealicense.com/licenses/mit/)
