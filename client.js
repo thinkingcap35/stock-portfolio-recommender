@@ -9,7 +9,7 @@ window.app = (function() {
         const newStockItem = document.createElement('div');
         newStockItem.className = 'stock-item';
         newStockItem.innerHTML = `
-            <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
+            <input type="text" class="stock-ticker" style="flex: 1; max-width: 120px; height: 38px;" placeholder="Enter US stock ticker (e.g., AAPL)" required>
             <button type="button" onclick="app.removeStock(this)">Remove</button>
         `;
         stockList.appendChild(newStockItem);
@@ -339,11 +339,6 @@ window.app = (function() {
                         `;
                     });
 
-                    // Render 52-week trend graphs
-                    recommendations.forEach((rec, index) => {
-                        renderStockGraph(rec, index);
-                    });
-
                     html += '</table>';
 
                     outputDiv.innerHTML = html;
@@ -351,6 +346,13 @@ window.app = (function() {
 
                     // Render allocation pie chart
                     renderAllocationPieChart(recommendations);
+
+                    // Render 52-week trend graphs after the HTML has been updated
+                    setTimeout(() => {
+                        recommendations.forEach((rec, index) => {
+                            renderStockGraph(rec, index);
+                        });
+                    }, 0);
 
                 } catch (error) {
                     console.error('Error in form submission:', error);
