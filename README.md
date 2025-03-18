@@ -1,13 +1,15 @@
 # Stock Portfolio Recommender
 
-This application provides personalized stock portfolio recommendations based on user risk profiles and selected stocks.
+This application provides personalized stock portfolio recommendations based on user risk profiles and selected stocks. It now includes two modes: manual stock selection and index-based recommendations.
 
 ## Features
 
 - Risk profile questionnaire
-- Stock selection interface
+- Manual stock selection interface
+- Index-based stock recommendations
 - Portfolio allocation recommendations
 - Visual representation of allocation using charts
+- Real-time stock data from Alpha Vantage API
 
 ## Prerequisites
 
@@ -43,9 +45,18 @@ This application provides personalized stock portfolio recommendations based on 
 
 ## Usage
 
-1. Complete the risk profile questionnaire.
-2. Enter your available funding and select stocks.
-3. Click "Get Recommendations" to receive your personalized portfolio allocation.
+### Manual Stock Selection
+1. Open `index.html` in your browser
+2. Complete the risk profile questionnaire
+3. Enter your available funding and select stocks
+4. Click "Get Recommendations" to receive your personalized portfolio allocation
+
+### Index-Based Recommendations
+1. Open `index_based.html` in your browser
+2. Enter your funding amount and risk profile
+3. Select an index (S&P 500, NASDAQ, or Dow Jones)
+4. Specify market capitalization range
+5. Click "Get Recommendations" to receive index-based stock recommendations
 
 ## Development
 
@@ -54,6 +65,10 @@ To run the application in development mode with auto-reloading:
 ```
 npm run dev
 ```
+
+## Project Evolution
+
+See [app_evolution.md](app_evolution.md) for a detailed history of the project's development and architecture changes.
 
 ## Contributing
 

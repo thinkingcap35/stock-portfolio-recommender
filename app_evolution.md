@@ -35,6 +35,14 @@
    - Improved error handling and user feedback throughout the process
    - Optimized chart rendering to prevent conflicts with multiple data updates
 
+7. **Index-Based Recommendations and UI Improvements (v3.4)**:
+   - Added index-based stock recommendations feature
+   - Implemented market cap range filtering for index-based recommendations
+   - Created a separate page for index-based recommendations (index_based.html)
+   - Switched from Polygon.io to Alpha Vantage API for stock data
+   - Added a risk profile questionnaire to the main page
+   - Improved UI navigation and user experience
+
 ## Architecture Evolution
 
 ```mermaid
@@ -86,6 +94,17 @@ graph TD
         FF --> GG[Optimized Chart Rendering]
         GG --> HH[Real-time Status Updates]
     end
+
+    subgraph "v3.4"
+        II[User Input] --> JJ{Input Type}
+        JJ -->|Manual| KK[Risk Questionnaire]
+        JJ -->|Index-Based| LL[Index & Market Cap Selection]
+        KK --> MM[Alpha Vantage API]
+        LL --> MM
+        MM --> NN[Enhanced Data Processing]
+        NN --> OO[Advanced Visualization]
+        OO --> PP[Improved UI with Multiple Pages]
+    end
 ```
 
-This diagram illustrates how our app evolved from a simple hardcoded solution to a sophisticated, resilient application with advanced error handling, rate limiting management, and improved user experience.
+This diagram illustrates how our app evolved from a simple hardcoded solution to a sophisticated, multi-feature application with advanced error handling, multiple data sources, and improved user experience across different recommendation types.
