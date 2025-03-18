@@ -1,5 +1,6 @@
 // Stock Portfolio Recommender v3.0
 window.app = (function() {
+    console.log('Initializing app namespace...');
     let allocationPieChart = null;
 
     // Function to add a new stock input field
@@ -32,6 +33,7 @@ window.app = (function() {
 
     // Function to calculate risk profile from questionnaire
     function calculateRiskProfile() {
+        console.log('Calculating risk profile...');
         const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
         let totalScore = 0;
         let unansweredQuestions = [];
@@ -234,6 +236,7 @@ window.app = (function() {
 
     // Initialize event listeners
     function init() {
+        console.log('Initializing event listeners...');
         // Add event listeners for radio buttons to update progress
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', updateProgress);
@@ -304,9 +307,12 @@ window.app = (function() {
     document.addEventListener('DOMContentLoaded', init);
 
     // Return public methods
-    return {
+    const publicMethods = {
         addStock,
         removeStock,
         calculateRiskProfile
     };
+
+    console.log('App namespace initialized with methods:', Object.keys(publicMethods));
+    return publicMethods;
 })();
